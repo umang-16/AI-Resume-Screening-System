@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="mb-5">
+    <a href="{{ url_for('student.list_jobs') }}" class="btn btn-light btn-sm rounded-pill mb-4 fw-bold border shadow-sm hover-scale px-4"><i class="bi bi-arrow-left me-1"></i> Return to Listing</a>
+    <h2 class="fw-bold display-5 text-dark mb-1">{{ job.title }}</h2>
+    <h5 class="text-primary fw-bold"><i class="bi bi-building me-2"></i> {{ job.hr.name }}</h5>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-lg-8">
+        <div class="card p-5 border-0 shadow-lg rounded-4 glass-card h-100">
+            <h4 class="fw-bold text-dark border-bottom pb-3 mb-4"><i class="bi bi-card-text text-primary me-2"></i> Role Description</h4>
+            <p class="text-muted fs-5 lh-lg" style="white-space: pre-wrap;">{{ job.description }}</p>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card p-4 border-0 shadow-lg rounded-4 glass-card mb-4 position-relative overflow-hidden">
+            <div class="position-absolute align-self-end opacity-10 display-1 text-primary pointer-events-none" style="top: 15px; right: 15px; transform: rotate(15deg);"><i class="bi bi-info-circle-fill"></i></div>
+            <h5 class="fw-bold text-dark border-bottom pb-3 mb-4"><i class="bi bi-list-check text-primary me-2"></i> Job Specifications</h5>
+            <ul class="list-unstyled mb-0 position-relative z-1">
+                <li class="mb-3 d-flex align-items-center"><i class="bi bi-cash fs-4 text-success me-3"></i> <div><small class="text-muted d-block fw-bold text-uppercase">Salary</small><span class="fw-bold text-dark fs-5">{{ job.salary or 'N/A' }}</span></div></li>
+                <li class="mb-3 d-flex align-items-center"><i class="bi bi-geo-alt-fill fs-4 text-danger me-3"></i> <div><small class="text-muted d-block fw-bold text-uppercase">Location</small><span class="fw-bold text-dark fs-5">{{ job.location or 'N/A' }}</span></div></li>
+                <li class="d-flex align-items-center"><i class="bi bi-clock-fill fs-4 text-secondary me-3"></i> <div><small class="text-muted d-block fw-bold text-uppercase">Experience Required</small><span class="fw-bold text-dark fs-5">{{ job.experience or 'N/A' }}</span></div></li>
+            </ul>
+        </div>
+        
+        <div class="card p-4 border-0 shadow-lg rounded-4 glass-card bg-primary bg-opacity-10 border-primary border-opacity-25">
+            <h5 class="fw-bold text-primary mb-3"><i class="bi bi-code-slash me-2"></i> Core Competencies</h5>
+            <div class="d-flex flex-wrap gap-2">
+                {% for skill in job.required_skills.split(',') %}
+                    {% if skill.strip() %}
+                    <span class="badge bg-white text-dark border shadow-sm px-3 py-2 rounded-pill fs-6">{{ skill.strip() }}</span>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            
+            {% if missing_skills %}
+            <div class="mt-4 pt-4 border-top border-primary border-opacity-25">
+                <h6 class="fw-bold text-danger mb-3"><i class="bi bi-exclamation-triangle-fill me-1"></i> Recommended Upskilling</h6>
+                <p class="small text-dark mb-3 fw-medium">To achieve a perfect 100% Match Score, the AI engine identified these missing skills from your trajectory:</p>
+                <div class="d-flex flex-wrap gap-2">
+                    {% for ms in missing_skills[:6] %}
+                        <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-50 px-3 py-2 rounded-pill shadow-sm"><i class="bi bi-arrow-up-right-circle-fill me-1"></i> {{ ms.title() }}</span>
+                    {% endfor %}
+                    {% if missing_skills|length > 6 %}
+                        <span class="badge bg-secondary bg-opacity-10 text-muted px-3 py-2 rounded-pill border shadow-sm">+{{ missing_skills|length - 6 }} variants</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="card p-4 border-0 shadow-sm rounded-4 text-center glass-card my-5 bg-white mb-5">
+    {% if existing_app %}
+        <div class="my-3">
+            <i class="bi bi-shield-check text-success display-3 d-block mb-3"></i>
+            <h4 class="fw-bold text-dark">Application Secured</h4>
+            <p class="text-muted fs-5">You have successfully transmitted your parsed profile to this employer.</p>
+            <div class="d-flex justify-content-center gap-3 mt-4">
+                <form action="{{ url_for('student.withdraw_application', job_id=job.id) }}" method="POST" onsubmit="return confirm('WARNING: Are you sure you want to withdraw?');">
+                    <button type="submit" class="btn btn-outline-danger btn-lg rounded-pill fw-bold shadow-sm hover-scale px-5 py-3"><i class="bi bi-x-circle-fill me-2"></i> Withdraw Initialization</button>
+                </form>
+            </div>
+        </div>
+    {% else %}
+        <div class="my-3">
+            <h4 class="fw-bold text-dark mb-3">Ready to Apply?</h4>
+            <form action="{{ url_for('student.apply_job', job_id=job.id) }}" method="POST">
+                <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-lg fw-bold hover-scale px-5 py-3"><i class="bi bi-send-fill me-2 fs-5"></i> Dispatch Application Vectors</button>
+            </form>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

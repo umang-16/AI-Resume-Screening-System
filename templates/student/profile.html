@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="mb-5">
+    <h2 class="fw-bold display-6 text-dark mb-2">Portfolio Configuration</h2>
+    <p class="text-muted fs-5">Enhance your profile and calibrate your AI-integrated resume.</p>
+</div>
+
+<div class="row g-4 mb-5">
+    <!-- Profile Info -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-lg rounded-4 glass-card text-center p-5 mb-4 position-relative overflow-hidden">
+            <div class="position-absolute top-0 start-50 translate-middle bg-primary opacity-10" style="width: 250px; height: 250px; border-radius: 50%; filter: blur(40px);"></div>
+            <div class="position-relative z-1">
+                <div class="bg-primary text-white mx-auto rounded-circle d-flex align-items-center justify-content-center shadow-lg mb-4 hover-scale" style="width: 110px; height: 110px; font-size: 3rem; font-weight: bold; border: 4px solid white;">
+                    {{ current_user.name[0]|upper }}
+                </div>
+                <h3 class="fw-bold text-dark mb-1">{{ current_user.name }}</h3>
+                <p class="text-muted mb-3 fs-6"><i class="bi bi-envelope-fill me-2 opacity-50"></i>{{ current_user.email }}</p>
+                <div class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-50 px-4 py-2 rounded-pill shadow-sm fw-bold fs-6 mt-2"><i class="bi bi-shield-check me-1"></i> Verified Student</div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-lg rounded-4 bg-white p-4 overflow-hidden position-relative hover-scale">
+            <div class="position-absolute top-0 end-0 bg-danger opacity-10" style="width: 100px; height: 100px; border-radius: 50%; transform: translate(30%, -30%); filter: blur(20px);"></div>
+            <h6 class="fw-bold text-dark border-bottom pb-3 mb-3 position-relative z-1"><i class="bi bi-file-earmark-pdf-fill text-danger me-2 fs-5"></i> Current Resume Link</h6>
+            {% if current_user.resume_filename %}
+                <div class="d-flex align-items-center justify-content-between p-3 rounded-4 border bg-light shadow-sm position-relative z-1">
+                    <div class="text-truncate fw-bold text-muted me-2" style="max-width: 150px;">{{ current_user.resume_filename }}</div>
+                    <a href="{{ url_for('student.view_resume', filename=current_user.resume_filename) }}" target="_blank" class="btn btn-sm btn-primary rounded-pill shadow-sm fw-bold px-3 py-2 hover-scale"><i class="bi bi-box-arrow-up-right me-1"></i> Inspect</a>
+                </div>
+            {% else %}
+                <div class="text-center py-4 bg-light rounded-4 border text-muted shadow-sm position-relative z-1">
+                    <i class="bi bi-exclamation-octagon-fill text-warning display-4 d-block mb-2"></i> 
+                    <span class="fw-bold text-dark">No PDF Linked</span>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Edit Profile Form -->
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-lg rounded-4 bg-white p-0 overflow-hidden">
+            <div class="border-bottom px-5 py-4 bg-light">
+                <h4 class="fw-bold text-dark mb-0"><i class="bi bi-cpu text-primary me-2"></i> Technical Profile Metadata</h4>
+            </div>
+            <div class="p-5">
+                <form action="{{ url_for('student.profile') }}" method="POST" enctype="multipart/form-data">
+                    <div class="row g-4">
+                        <div class="col-md-6 form-floating">
+                            <input type="text" class="form-control bg-light shadow-sm" value="{{ current_user.name }}" disabled>
+                            <label class="ms-2 fw-medium text-muted">Registered Name</label>
+                        </div>
+                        <div class="col-md-6 form-floating">
+                            <input type="email" class="form-control bg-light shadow-sm" value="{{ current_user.email }}" disabled>
+                            <label class="ms-2 fw-medium text-muted">Email Address</label>
+                        </div>
+                        <div class="col-12 form-floating mt-4">
+                            <input type="text" class="form-control shadow-sm fw-medium" name="phone" id="phone" value="{{ current_user.phone or '' }}" placeholder="Phone">
+                            <label for="phone" class="ms-2 fw-medium text-muted"><i class="bi bi-telephone text-primary opacity-50 me-2"></i> Contact Number</label>
+                        </div>
+                        <div class="col-12 form-floating">
+                            <input type="text" class="form-control shadow-sm fw-medium" name="education" id="education" value="{{ current_user.education or '' }}" placeholder="Education">
+                            <label for="education" class="ms-2 fw-medium text-muted"><i class="bi bi-book text-primary opacity-50 me-2"></i> Degree & Institution Sequence</label>
+                        </div>
+                        
+                        <div class="col-12 mt-5">
+                            <h5 class="fw-bold text-dark border-bottom pb-3 mb-4"><i class="bi bi-bullseye text-primary me-2"></i> AI-Parsed Skills Vector</h5>
+                            {% if current_user.skills %}
+                            <div class="d-flex flex-wrap gap-2 mb-4">
+                                {% for skill in current_user.skills.split(',') %}
+                                    {% if skill.strip() %}
+                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-4 py-2 rounded-pill shadow-sm fs-6"><i class="bi bi-check-circle-fill me-1 opacity-50"></i> {{ skill.strip() }}</span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="alert alert-info border-0 shadow-sm rounded-4 py-3 d-flex align-items-center mb-0 bg-primary bg-opacity-10">
+                                <i class="bi bi-info-circle-fill text-primary fs-4 me-3"></i>
+                                <p class="small text-dark mb-0 fw-medium">These vectors were dynamically extracted from your uploaded resume by the NLP engine. To inject new skills into the system, upload an updated binary.</p>
+                            </div>
+                            {% else %}
+                            <div class="alert alert-warning border-0 shadow-sm rounded-4 py-4 d-flex align-items-center">
+                                <i class="bi bi-shield-exclamation text-warning display-5 me-4"></i>
+                                <div>
+                                    <h6 class="fw-bold text-dark mb-1">No Skill Vectors Detected</h6>
+                                    <p class="mb-0 text-muted small">Upload a technical resume in PDF format below to securely activate the AI tracking parser!</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-12 mt-5 bg-light p-4 border rounded-4 position-relative overflow-hidden shadow-sm hover-scale">
+                            <div class="position-absolute end-0 top-50 translate-middle-y opacity-10 text-danger me-4 display-1 pointer-events-none"><i class="bi bi-filetype-pdf"></i></div>
+                            <h5 class="fw-bold text-dark mb-3 position-relative z-1">Commit New Resume Payload</h5>
+                            <input type="file" class="form-control form-control-lg border border-2 shadow-sm position-relative z-1 bg-white" name="resume" accept="application/pdf">
+                            <div class="form-text mt-3 fw-medium text-muted position-relative z-1"><i class="bi bi-lightning-charge-fill text-warning me-1"></i> Uploading a new PDF securely triggers the NLP core to recalculate your skill matrix.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-5 pt-4 border-top">
+                        <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-lg fw-bold w-100 py-3 hover-scale"><i class="bi bi-cloud-arrow-up-fill me-2 fs-5 align-middle"></i> Execute Complete Portfolio Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

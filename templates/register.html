@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center align-items-center mt-3" style="min-height: 75vh;">
+    <div class="col-lg-6 col-md-8">
+        <a href="{{ url_for('index') }}" class="btn btn-primary btn-sm rounded-pill mb-3 shadow-sm fw-bold hover-scale px-4"><i class="bi bi-arrow-left me-1"></i> Back to Home</a>
+        <div class="card p-5 shadow-lg border-0 rounded-4 glass-card position-relative overflow-hidden mb-5">
+            <div class="position-absolute top-100 start-0 bg-primary opacity-10" style="width: 300px; height: 300px; border-radius: 50%; transform: translate(-30%, -50%); filter: blur(50px);"></div>
+            <div class="text-center mb-4 position-relative z-1">
+                <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2 mb-3 fw-bold tracking-wide border border-primary border-opacity-25 shadow-sm">JOIN AIPLACEMENT</span>
+                <h3 class="fw-bold text-dark display-6 fs-2">Create an Account</h3>
+                <p class="text-muted">Start your journey with the world's smartest AI pipeline today.</p>
+            </div>
+            <form method="POST" class="position-relative z-1">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <div class="form-floating">
+                            <input type="text" class="form-control shadow-sm" id="name" name="name" placeholder="Full Name" required>
+                            <label for="name"><i class="bi bi-person me-2 text-muted"></i>Full Name</label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-floating">
+                            <input type="email" class="form-control shadow-sm" id="email" name="email" placeholder="name@example.com" required>
+                            <label for="email"><i class="bi bi-envelope me-2 text-muted"></i>Email address</label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-floating">
+                            <input type="password" class="form-control shadow-sm" id="password" name="password" placeholder="Password" required>
+                            <label for="password"><i class="bi bi-lock me-2 text-muted"></i>Password</label>
+                        </div>
+                    </div>
+                    <div class="col-12 mb-3 mt-4">
+                        <label class="form-label text-muted small fw-bold text-uppercase ms-1 mb-2">Select Your Role:</label>
+                        <div class="d-flex flex-column flex-sm-row gap-3">
+                            <div class="form-check flex-grow-1 border shadow-sm rounded-4 p-3 bg-white hover-scale m-0">
+                                <input class="form-check-input ms-1 mt-1 cursor-pointer" type="radio" name="role" id="roleStudent" value="student" {% if request.args.get('role') != 'hr' %}checked{% endif %}>
+                                <label class="form-check-label ms-2 fw-bold text-dark w-100 cursor-pointer user-select-none" for="roleStudent">
+                                    <i class="bi bi-mortarboard-fill text-primary me-1 fs-5 align-middle"></i> Job Seeker (Student)
+                                </label>
+                            </div>
+                            <div class="form-check flex-grow-1 border shadow-sm rounded-4 p-3 bg-white hover-scale m-0">
+                                <input class="form-check-input ms-1 mt-1 cursor-pointer" type="radio" name="role" id="roleHR" value="hr" {% if request.args.get('role') == 'hr' %}checked{% endif %}>
+                                <label class="form-check-label ms-2 fw-bold text-dark w-100 cursor-pointer user-select-none" for="roleHR">
+                                    <i class="bi bi-building-fill text-primary me-1 fs-5 align-middle"></i> Employer (HR)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 btn-lg rounded-pill shadow-lg fw-bold hover-scale py-3 mt-3">Register Account</button>
+            </form>
+            <div class="text-center mt-4 position-relative z-1 pt-3 border-top">
+                <p class="text-muted small mb-0">Already have an account? <a href="{{ url_for('auth.login') }}" class="text-primary fw-bold text-decoration-none">Log in here</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+<style> .cursor-pointer { cursor: pointer; } </style>
+{% endblock %}

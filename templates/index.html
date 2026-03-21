@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block container_class %}container-fluid px-0 w-100 overflow-hidden{% endblock %}
+
+{% block content %}
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
+        padding: 120px 0;
+        margin: 20px auto;
+        border-radius: 30px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+    }
+    .feature-icon {
+        width: 80px; height: 80px;
+        border-radius: 20px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 2.5rem;
+        margin: 0 auto 20px;
+        transition: transform 0.3s;
+    }
+    .hover-scale { transition: transform 0.3s, box-shadow 0.3s; }
+    .hover-scale:hover .feature-icon { transform: scale(1.1); }
+    .badge-soft { background-color: rgba(37, 99, 235, 0.1); color: #2563eb; font-weight: 700; padding: 8px 16px; border-radius: 30px; }
+    .step-circle {
+        width: 60px; height: 60px;
+        border-radius: 50%;
+        background: #2563eb; color: white;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem; font-weight: bold;
+        margin: 0 auto 20px;
+        box-shadow: 0 10px 20px rgba(37,99,235,0.2);
+    }
+    .footer { background: #0f172a; color: #cbd5e1; border-radius: 30px; padding: 60px 0 30px; margin: 60px auto 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.1) }
+    .footer a { color: #cbd5e1; text-decoration: none; transition: color 0.2s; }
+    .footer a:hover { color: #fff; }
+</style>
+
+<!-- Hero Section -->
+<div class="hero-section text-center px-4 mx-auto" style="max-width: 1400px; width: 95%;">
+    <span class="badge-soft d-inline-block mb-4 text-uppercase tracking-wide">Next Generation Hiring Platform</span>
+    <h1 class="display-3 fw-bold text-dark mb-4">AI Resume Screening System</h1>
+    <p class="lead text-muted mb-5 mx-auto" style="max-width: 750px; font-size: 1.25rem;">
+        Bridging the gap between top talent and leading companies. Our advanced NLP engine automatically extracts candidate skills, calculating precision match scores for every single job post.
+    </p>
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <a href="{{ url_for('auth.register') }}?role=student" class="btn btn-primary btn-lg rounded-pill px-5 py-3 shadow-sm fw-bold hover-scale">
+            <i class="bi bi-mortarboard me-2"></i> Join as Student
+        </a>
+        <a href="{{ url_for('auth.register') }}?role=hr" class="btn btn-light bg-white text-primary btn-lg rounded-pill px-5 py-3 shadow-sm border fw-bold hover-scale">
+            <i class="bi bi-building me-2"></i> Post a Job (HR)
+        </a>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="container mt-5 pt-5 pb-3">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold mb-3">Powerful Capabilities</h2>
+        <p class="text-muted">Designed for maximum efficiency, objectivity, and precision.</p>
+    </div>
+    <div class="row g-4 text-center">
+        <div class="col-md-4">
+            <div class="card h-100 p-5 hover-scale">
+                <div class="feature-icon bg-primary bg-opacity-10 text-primary">
+                    <i class="bi bi-file-earmark-person"></i>
+                </div>
+                <h4 class="fw-bold mb-3">AI Resume Analysis</h4>
+                <p class="text-muted">Upload your PDF resume. Our NLP engine will parse the text and accurately extract core tech skills completely automatically.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 p-5 hover-scale">
+                <div class="feature-icon bg-success bg-opacity-10 text-success">
+                    <i class="bi bi-bullseye"></i>
+                </div>
+                <h4 class="fw-bold mb-3">Smart Matching</h4>
+                <p class="text-muted">Algorithms calculate an exact match percentage between the applicant's extracted skills and the employer's job requirements.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 p-5 hover-scale">
+                <div class="feature-icon bg-warning bg-opacity-10 text-warning">
+                    <i class="bi bi-kanban"></i>
+                </div>
+                <h4 class="fw-bold mb-3">Job Management</h4>
+                <p class="text-muted">A dedicated HR dashboard to cleanly manage published jobs, review candidates seamlessly, and instantly shortlist top performers.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How It Works Section -->
+<div class="bg-white py-5 mt-5">
+    <div class="container my-4">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-3">How It Works</h2>
+            <p class="text-muted">From uploading your resume to getting shortlisted, in three easy steps.</p>
+        </div>
+        <div class="row text-center position-relative">
+            <!-- connecting line -->
+            <div class="position-absolute top-25 start-0 w-100 border-top border-2 border-primary opacity-25 d-none d-md-block" style="z-index: 0; transform: translateY(30px);"></div>
+            
+            <div class="col-md-4 mb-4 position-relative z-1">
+                <div class="step-circle">1</div>
+                <h5 class="fw-bold">Upload Resume</h5>
+                <p class="text-muted mx-auto" style="max-width: 250px;">Students set up their portfolio and securely upload their standard PDF resume.</p>
+            </div>
+            <div class="col-md-4 mb-4 position-relative z-1">
+                <div class="step-circle bg-success border-0 text-white">2</div>
+                <h5 class="fw-bold">AI Analysis</h5>
+                <p class="text-muted mx-auto" style="max-width: 250px;">The system reliably identifies key qualifications and stacks them against jobs.</p>
+            </div>
+            <div class="col-md-4 mb-4 position-relative z-1">
+                <div class="step-circle bg-warning text-dark border-0">3</div>
+                <h5 class="fw-bold">Get Matched</h5>
+                <p class="text-muted mx-auto" style="max-width: 250px;">HR accesses the pipeline intelligently sorted by the dynamic ATS scores.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- About Section -->
+<div class="container mt-5 pt-3 mb-5 text-center">
+    <div class="card bg-primary bg-opacity-10 border-0 p-5 hover-scale">
+        <div class="mx-auto" style="max-width: 900px;">
+            <i class="bi bi-chat-quote fs-1 text-primary opacity-50"></i>
+            <h3 class="fw-bold mb-3 mt-2 text-dark">About The System</h3>
+            <p class="lead text-muted mb-0">
+                AIPlacement was engineered to eliminate recruitment bias and streamline hiring operations. By integrating NLP keyword parsing directly into the applicant tracking framework, we drastically reduce the manual review overhead required by employers, while simultaneously surfacing better roles to eager job-seekers faster.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="footer px-4 mx-auto" style="max-width: 1400px; width: 95%;">
+    <div class="row px-md-5">
+        <div class="col-md-4 mb-4">
+            <h5 class="text-white fw-bold mb-3"><i class="bi bi-robot text-primary mb-2"></i> AIPlacement</h5>
+            <p class="small text-light opacity-75 mb-0">Revolutionizing the bridge between students and top tech employers with intelligence.</p>
+        </div>
+        <div class="col-md-4 mb-4 text-md-center">
+            <h6 class="text-white fw-bold mb-3">Quick Links</h6>
+            <ul class="list-unstyled small">
+                <li class="mb-2"><a href="{{ url_for('auth.login') }}">Login Portal</a></li>
+                <li class="mb-2"><a href="{{ url_for('auth.register') }}">Create Account</a></li>
+                <li class="mb-2"><a href="#">Information & Careers</a></li>
+            </ul>
+        </div>
+        <div class="col-md-4 mb-4 text-md-end">
+            <h6 class="text-white fw-bold mb-3">Contact Us</h6>
+            <p class="small text-light opacity-75 mb-1"><i class="bi bi-envelope me-1"></i> support@aiplacement.com</p>
+            <p class="small text-light opacity-75"><i class="bi bi-geo-alt me-1"></i> Tech District, NY 10012</p>
+            <div class="d-flex justify-content-md-end gap-3 mt-3">
+                <a href="#" class="text-light opacity-75 fs-5 hover-white"><i class="bi bi-github"></i></a>
+                <a href="#" class="text-light opacity-75 fs-5 hover-white"><i class="bi bi-linkedin"></i></a>
+                <a href="#" class="text-light opacity-75 fs-5 hover-white"><i class="bi bi-twitter"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="border-top border-secondary mt-5 pt-4 text-center small text-light opacity-75">
+        &copy; 2026 AI Resume Screening System. All rights reserved.
+    </div>
+</div>
+
+{% endblock %}
