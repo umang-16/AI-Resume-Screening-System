@@ -30,7 +30,11 @@ def dashboard():
     total_applicants = Application.query.filter(Application.job_id.in_(job_ids)).count() if job_ids else 0
     shortlisted = Application.query.filter(Application.job_id.in_(job_ids), Application.status == 'Shortlisted').count() if job_ids else 0
     
-    return render_template('hr/dashboard.html', total_jobs=total_jobs, total_applicants=total_applicants, shortlisted=shortlisted)
+    # Advanced metrics
+    recent_apps = Application.query.filter(Application.job_id.in_(job_ids)).order_by(Application.applied_at.desc()).limit(5).all() if job_ids else []
+    notifications = Notification.query.filter_by(user_id=current_user.id).order_by(Notification.created_at.desc()).limit(10).all()
+    
+    return render_template('hr/dashboard.html', total_jobs=total_jobs, total_applicants=total_applicants, shortlisted=shortlisted, recent_apps=recent_apps, notifications=notifications)
 
 @hr_bp.route('/jobs', methods=['GET', 'POST'])
 @hr_required

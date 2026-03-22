@@ -29,9 +29,61 @@
     </div>
 </div>
 
-<div class="card p-5 border-0 shadow-lg rounded-4 glass-card text-center my-4 py-5 mb-5">
-    <div class="opacity-50 text-primary mb-3"><i class="bi bi-activity display-1"></i></div>
-    <h3 class="fw-bold text-dark">Data Overview</h3>
-    <p class="text-muted fs-5 max-w-700 mx-auto">Your pipeline is processing efficiently. Navigate to Manage Jobs to inspect your AI-calculated candidate matching queues directly.</p>
+<div class="row g-4 mb-5">
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm rounded-4 glass-card h-100 p-4 bg-white">
+            <h5 class="fw-bold text-dark border-bottom pb-3 mb-4"><i class="bi bi-clock-history text-primary me-2"></i> Real-time Application Feed</h5>
+            {% if recent_apps %}
+                <div class="list-group list-group-flush border-0 pe-2" style="max-height: 400px; overflow-y: auto;">
+                {% for app in recent_apps %}
+                    <a href="{{ url_for('hr.view_candidates', job_id=app.job_id) }}" class="list-group-item list-group-item-action border-0 rounded-3 mb-3 p-3 shadow-sm bg-light hover-scale">
+                        <div class="d-flex w-100 justify-content-between align-items-center mb-1">
+                            <h6 class="mb-0 fw-bold text-dark">{{ app.student.name }}</h6>
+                            <small class="text-muted fw-bold" style="font-size: 0.65rem;">{{ app.applied_at.strftime('%b %d, %H:%M') }}</small>
+                        </div>
+                        <p class="mb-2 text-muted small fw-medium"><i class="bi bi-briefcase me-1"></i> {{ app.job.title }}</p>
+                        <div class="d-flex align-items-center mt-1">
+                            {% set score_color = 'success' if app.match_score >= 80 else 'warning' if app.match_score >= 50 else 'danger' %}
+                            <span class="badge bg-{{ score_color }} bg-opacity-10 text-{{ score_color }} border border-{{ score_color }} border-opacity-25 rounded-pill px-3 py-1 shadow-sm"><i class="bi bi-cpu me-1"></i> {{ app.match_score }}% Match</span>
+                            <span class="badge bg-dark bg-opacity-10 text-dark border rounded-pill px-3 py-1 ms-2 shadow-sm">{{ app.status }}</span>
+                        </div>
+                    </a>
+                {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center text-muted my-5 py-4">
+                    <i class="bi bi-inbox fs-1 d-block mb-3 opacity-25"></i>
+                    <p class="fw-medium">No candidate activity detected recently.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm rounded-4 glass-card h-100 p-4 bg-white">
+            <h5 class="fw-bold text-dark border-bottom pb-3 mb-4"><i class="bi bi-bell-fill text-warning me-2"></i> System Notifications</h5>
+            {% if notifications %}
+                <div class="list-group list-group-flush pe-2" style="max-height: 400px; overflow-y: auto;">
+                {% for notif in notifications %}
+                    <div class="list-group-item border-0 border-bottom border-light px-1 py-3">
+                        <div class="d-flex align-items-start">
+                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-3 mt-1 shadow-sm d-flex justify-content-center align-items-center" style="width: 32px; height: 32px;">
+                                <i class="bi bi-info-circle-fill"></i>
+                            </div>
+                            <div>
+                                <p class="mb-1 fw-medium text-dark small lh-sm">{{ notif.message }}</p>
+                                <small class="text-black-50 fw-bold d-block mt-1" style="font-size: 0.65rem;">{{ notif.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center text-muted my-5 py-4">
+                    <i class="bi bi-bell-slash fs-1 d-block mb-3 opacity-25"></i>
+                    <p class="fw-medium">Your notification tray is currently empty.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
 {% endblock %}
