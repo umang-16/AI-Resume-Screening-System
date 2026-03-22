@@ -60,6 +60,13 @@
         
         /* Modern Utilities */
         .badge { font-weight: 700; padding: 0.5em 0.8em; }
+        .active-nav-pill {
+            background-color: rgba(59, 130, 246, 0.15);
+            color: #2563eb !important;
+            border-radius: 50rem;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.05);
+        }
         .glass-card { 
             background: rgba(255, 255, 255, 0.85); 
             backdrop-filter: blur(24px); 
@@ -97,13 +104,13 @@
                     <ul class="navbar-nav ms-auto align-items-center fw-medium">
                         {% if current_user.is_authenticated %}
                             {% if current_user.role == 'hr' %}
-                                <li class="nav-item"><a class="nav-link px-3" href="{{ url_for('hr.dashboard') }}">Dashboard</a></li>
-                                <li class="nav-item"><a class="nav-link px-3" href="{{ url_for('hr.manage_jobs') }}">Manage Jobs</a></li>
-                                <li class="nav-item"><a class="nav-link px-3" href="{{ url_for('hr.profile') }}">Company Profile</a></li>
+                                <li class="nav-item ms-1"><a class="nav-link px-3 {% if request.endpoint == 'hr.dashboard' %}active-nav-pill{% endif %}" href="{{ url_for('hr.dashboard') }}">Dashboard</a></li>
+                                <li class="nav-item ms-1"><a class="nav-link px-3 {% if request.endpoint == 'hr.manage_jobs' %}active-nav-pill{% endif %}" href="{{ url_for('hr.manage_jobs') }}">Manage Jobs</a></li>
+                                <li class="nav-item ms-1"><a class="nav-link px-3 {% if request.endpoint == 'hr.profile' %}active-nav-pill{% endif %}" href="{{ url_for('hr.profile') }}">Company Profile</a></li>
                             {% elif current_user.role == 'student' %}
-                                <li class="nav-item"><a class="nav-link px-3" href="{{ url_for('student.dashboard') }}">My Applications</a></li>
-                                <li class="nav-item"><a class="nav-link px-3" href="{{ url_for('student.list_jobs') }}">Find Jobs</a></li>
-                                <li class="nav-item"><a class="nav-link px-3" href="{{ url_for('student.profile') }}">Profile</a></li>
+                                <li class="nav-item ms-1"><a class="nav-link px-3 {% if request.endpoint == 'student.dashboard' %}active-nav-pill{% endif %}" href="{{ url_for('student.dashboard') }}">My Applications</a></li>
+                                <li class="nav-item ms-1"><a class="nav-link px-3 {% if request.endpoint == 'student.list_jobs' or request.endpoint == 'student.job_detail' %}active-nav-pill{% endif %}" href="{{ url_for('student.list_jobs') }}">Find Jobs</a></li>
+                                <li class="nav-item ms-1"><a class="nav-link px-3 {% if request.endpoint == 'student.profile' %}active-nav-pill{% endif %}" href="{{ url_for('student.profile') }}">Profile</a></li>
                             {% endif %}
                             
                             <!-- Notifications Dropdown -->
