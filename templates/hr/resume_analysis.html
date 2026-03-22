@@ -1,18 +1,34 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="row mb-5 align-items-center">
+<style>
+@media print {
+    body * { visibility: hidden; }
+    #printable-report, #printable-report * { visibility: visible; }
+    #printable-report { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; }
+    .no-print { display: none !important; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .glass-card { box-shadow: none !important; border: 1px solid #ddd !important; break-inside: avoid; }
+}
+</style>
+
+<div class="row mb-5 align-items-center no-print">
     <div class="col-md-8">
         <a href="{{ url_for('hr.view_candidates', job_id=app.job_id) }}" class="btn btn-light btn-sm rounded-pill mb-3 fw-bold border shadow-sm hover-scale px-4"><i class="bi bi-arrow-left"></i> Return to Pipeline</a>
-        <h2 class="fw-bold display-6 mb-2">AI Output Trace Record</h2>
-        <p class="text-muted fs-5 mb-0">Deep NLP breakdown for <span class="text-primary fw-bold">{{ app.student.name }}</span> applying to <span class="text-dark fw-bold">{{ app.job.title }}</span></p>
     </div>
     <div class="col-md-4 text-md-end mt-3 mt-md-0 d-flex flex-column gap-2 justify-content-end align-items-md-end">
-        <a href="{{ url_for('hr.view_resume', filename=app.student.resume_filename) }}" target="_blank" class="btn btn-primary rounded-pill fw-bold shadow-sm hover-scale px-4 py-2"><i class="bi bi-file-earmark-pdf-fill me-2 fs-5 align-middle"></i> Inspect Original PDF</a>
+        <a href="{{ url_for('hr.view_resume', filename=app.student.resume_filename) }}" target="_blank" class="btn btn-primary rounded-pill fw-bold shadow-sm hover-scale px-4 py-2"><i class="bi bi-file-earmark-pdf-fill me-2 fs-5 align-middle"></i> Inspect Original CV</a>
         <a href="{{ url_for('hr.download_analysis', app_id=app.id) }}" class="btn btn-success rounded-pill fw-bold shadow-sm hover-scale px-4 py-2"><i class="bi bi-file-earmark-excel-fill me-2 fs-5 align-middle"></i> Export Excel Report</a>
+        <button onclick="window.print()" class="btn btn-danger rounded-pill fw-bold shadow-sm hover-scale px-4 py-2"><i class="bi bi-printer-fill me-2 fs-5 align-middle"></i> Download PDF Report</button>
     </div>
 </div>
 
-<div class="row g-4 mb-5">
+<div id="printable-report">
+    <div class="mb-5">
+        <h2 class="fw-bold display-6 mb-2">AI Output Trace Record</h2>
+        <p class="text-muted fs-5 mb-0">Deep NLP breakdown for <span class="text-primary fw-bold">{{ app.student.name }}</span> applying to <span class="text-dark fw-bold">{{ app.job.title }}</span></p>
+    </div>
+
+    <div class="row g-4 mb-5">
     <!-- Match Score Card -->
     <div class="col-lg-4">
         <div class="card border-0 shadow-lg rounded-4 glass-card p-5 text-center h-100 position-relative overflow-hidden bg-white">
@@ -84,5 +100,6 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}
