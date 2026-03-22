@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row mb-5 align-items-center">
+    <div class="col-md-8">
+        <a href="{{ url_for('hr.view_candidates', job_id=app.job_id) }}" class="btn btn-light btn-sm rounded-pill mb-3 fw-bold border shadow-sm hover-scale px-4"><i class="bi bi-arrow-left"></i> Return to Pipeline</a>
+        <h2 class="fw-bold display-6 mb-2">AI Output Trace Record</h2>
+        <p class="text-muted fs-5 mb-0">Deep NLP breakdown for <span class="text-primary fw-bold">{{ app.student.name }}</span> applying to <span class="text-dark fw-bold">{{ app.job.title }}</span></p>
+    </div>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <a href="{{ url_for('hr.view_resume', filename=app.student.resume_filename) }}" target="_blank" class="btn btn-primary rounded-pill fw-bold shadow-lg hover-scale px-4 py-3"><i class="bi bi-file-earmark-pdf-fill me-2 fs-5 align-middle"></i> Inspect Original PDF</a>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <!-- Match Score Card -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-lg rounded-4 glass-card p-5 text-center h-100 position-relative overflow-hidden bg-white">
+            {% set score_color = 'success' if app.match_score >= 80 else 'warning' if app.match_score >= 50 else 'danger' %}
+            <div class="position-absolute align-self-end opacity-10 display-1 text-{{ score_color }} pointer-events-none" style="top: 15px; right: 15px; transform: rotate(15deg);"><i class="bi bi-cpu-fill"></i></div>
+            
+            <h4 class="fw-bold text-dark mb-4">AI Compatibility Rating</h4>
+            <div class="position-relative d-inline-block mb-4 hover-scale mt-3">
+                <svg width="220" height="220" viewBox="0 0 36 36" class="circular-chart text-{{ score_color }}">
+                    <path class="circle-bg" stroke="#f0f0f0" stroke-width="2.5" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path class="circle" stroke-dasharray="{{ app.match_score }}, 100" stroke="currentColor" stroke-width="2.5" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" style="animation: progress 1.5s ease-out forwards;" />
+                </svg>
+                <div class="position-absolute top-50 start-50 translate-middle">
+                    <h2 class="fw-bold text-{{ score_color }} mb-0 display-3">{{ app.match_score }}<span class="fs-4">%</span></h2>
+                </div>
+            </div>
+            <p class="text-muted fs-6 mb-0 mt-3 px-3">Calculated by weighing semantic proximity of Parsed Resume Vectors against Core Job Attributes.</p>
+        </div>
+    </div>
+
+    <!-- Breakdown Details -->
+    <div class="col-lg-8">
+        <div class="row g-4 h-100">
+            <!-- Matched Skills -->
+            <div class="col-12">
+                <div class="card border-0 shadow-lg rounded-4 glass-card p-4 position-relative overflow-hidden h-100 bg-success bg-opacity-10 border-success border-opacity-25">
+                    <div class="position-absolute align-self-end opacity-10 display-1 text-success pointer-events-none" style="top: 15px; right: 15px; transform: rotate(15deg);"><i class="bi bi-check-circle-fill"></i></div>
+                    <h5 class="fw-bold text-success mb-3"><i class="bi bi-check-circle-fill me-2 fs-4 align-middle"></i> Verified Core Requirements</h5>
+                    <p class="small text-muted mb-3 fw-medium">These skills were explicitly mapped from the CV directly to the Job requirements.</p>
+                    <div class="d-flex flex-wrap gap-2 mt-2">
+                        {% for skill in matched_skills %}
+                            <span class="badge bg-white text-success border border-success border-opacity-50 shadow-sm px-4 py-2 rounded-pill fs-6"><i class="bi bi-check me-1 fs-5 align-middle"></i> {{ skill.title() }}</span>
+                        {% else %}
+                            <span class="text-danger fw-bold border border-danger border-opacity-50 px-3 py-2 rounded-2 bg-white small"><i class="bi bi-x-circle me-1"></i> No exact required parameters matched.</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Missing Skills -->
+            <div class="col-md-6">
+                <div class="card border-0 shadow-lg rounded-4 glass-card p-4 position-relative overflow-hidden h-100 bg-danger bg-opacity-10 border-danger border-opacity-25">
+                    <div class="position-absolute align-self-end opacity-10 display-1 text-danger pointer-events-none" style="top: 15px; right: 15px; transform: rotate(15deg);"><i class="bi bi-exclamation-triangle-fill"></i></div>
+                    <h5 class="fw-bold text-danger mb-3"><i class="bi bi-x-circle-fill me-2 fs-5 align-middle"></i> Missing Prerequisites</h5>
+                    <p class="small text-muted mb-3 fw-medium">AI could not detect these required skills anywhere in the parsed resume structure.</p>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for skill in missing_skills %}
+                            <span class="badge bg-white text-danger border border-danger border-opacity-50 shadow-sm px-3 py-2 rounded-pill fs-6">{{ skill.title() }}</span>
+                        {% else %}
+                            <span class="badge bg-success bg-opacity-25 text-success rounded-pill px-3 py-2 fw-bold w-100 text-center fs-5"><i class="bi bi-shield-check me-2"></i> 100% Core Mastery</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Extra Skills -->
+            <div class="col-md-6">
+                <div class="card border-0 shadow-lg rounded-4 glass-card p-4 position-relative overflow-hidden h-100 bg-white">
+                    <div class="position-absolute align-self-end opacity-10 display-1 text-primary pointer-events-none" style="top: 15px; right: 15px; transform: rotate(15deg);"><i class="bi bi-plus-circle-fill"></i></div>
+                    <h5 class="fw-bold text-primary mb-3"><i class="bi bi-plus-circle-fill me-2 fs-5 align-middle"></i> Surrounding Tech Stack</h5>
+                    <p class="small text-muted mb-3 fw-medium">Additional contextual metrics extracted by the NLP core that are external to job scope.</p>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for skill in extra_skills[:15] %}
+                            <span class="badge bg-light text-dark border shadow-sm px-3 py-2 rounded-pill">{{ skill.title() }}</span>
+                        {% else %}
+                            <span class="text-muted fst-italic small">No out-of-scope parameters tracked.</span>
+                        {% endfor %}
+                        {% if extra_skills|length > 15 %}
+                            <span class="badge bg-secondary bg-opacity-10 text-muted px-3 py-2 rounded-pill border shadow-sm">+{{ extra_skills|length - 15 }} variants</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

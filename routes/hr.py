@@ -171,3 +171,20 @@ def upload_offer(app_id):
         flash('Only PDF files are allowed for offer letters.', 'warning')
         
     return redirect(url_for('hr.view_candidates', job_id=application.job_id))
+
+@hr_bp.route('/application/<int:app_id>/analysis')
+@hr_required
+def application_analysis(app_id):
+    application = Application.query.get_or_404(app_id)
+    if application.job.hr_id != current_user.id:
+        flash('Unauthorized', 'danger')
+        return redirect(url_for('hr.dashboard'))
+        
+    req_skills = set(s.strip().lower() for s in application.job.required_skills.split(',') if s.strip())
+    res_skills = set(s.strip().lower() for s in (application.student.skills or '').split(',') if s.strip())
+    
+    missing_skills = list(req_skills - res_skills)
+    matched_skills = list(req_skills & res_skills)
+    extra_skills = list(res_skills - req_skills)
+    
+    return render_template('hr/resume_analysis.html', app=application, missing_skills=missing_skills, matched_skills=matched_skills, extra_skills=extra_skills)
