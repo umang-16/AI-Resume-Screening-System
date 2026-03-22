@@ -10,9 +10,6 @@
     {% for app in applications %}
     <div class="col-md-6 col-lg-4 d-flex">
         <div class="card w-100 p-4 border shadow-lg rounded-4 hover-scale bg-white d-flex flex-column position-relative overflow-hidden">
-            {% if app.status == 'Shortlisted' %}
-            <div class="position-absolute align-self-end opacity-10 display-1 text-success pointer-events-none" style="top: 15px; right: 15px; transform: rotate(15deg);"><i class="bi bi-trophy-fill"></i></div>
-            {% endif %}
             
             <div class="d-flex justify-content-between align-items-start mb-3">
                 <h4 class="fw-bold text-dark mb-1">{{ app.job.title }}</h4>
