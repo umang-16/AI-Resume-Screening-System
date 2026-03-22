@@ -1,8 +1,29 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="mb-5">
+<div class="mb-4">
     <h2 class="fw-bold display-6 text-dark mb-2">Application Tracking Center</h2>
     <p class="text-muted fs-5">Monitor the real-time status of your active applications.</p>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card p-4 border shadow-sm rounded-4 h-100 bg-white border-primary border-opacity-25 hover-scale">
+            <h6 class="text-muted fw-bold text-uppercase tracking-wider mb-2">Total Submissions</h6>
+            <h1 class="display-4 fw-bold text-primary mb-0">{{ applications|length }}</h1>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-4 border shadow-sm rounded-4 h-100 bg-white border-warning border-opacity-50 hover-scale">
+            <h6 class="text-warning fw-bold text-uppercase tracking-wider mb-2"><i class="bi bi-calendar-event-fill me-1"></i> Upcoming Interviews</h6>
+            <h1 class="display-4 fw-bold text-warning mb-0">{{ applications|selectattr('interview_date')|list|length }}</h1>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-4 border shadow-sm rounded-4 h-100 bg-success bg-opacity-10 border-success border-opacity-50 hover-scale">
+            <h6 class="text-success fw-bold text-uppercase tracking-wider mb-2"><i class="bi bi-award-fill me-1"></i> Official Offers</h6>
+            <h1 class="display-4 fw-bold text-success mb-0">{{ applications|selectattr('offer_letter_filename')|list|length }}</h1>
+        </div>
+    </div>
 </div>
 
 {% if applications %}
